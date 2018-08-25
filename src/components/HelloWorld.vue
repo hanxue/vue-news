@@ -11,11 +11,44 @@
             label="New York Times API Key"
             required
           ></v-text-field>
+          <v-autocomplete
+            v-model="selectedCategories"
+            :items="categories"
+            :disabled="isEditing"
+            box
+            chips
+            label="Filter news Category"
+            item-text="category"
+            item-value="category"
+            multiple
+          >
+            <template
+              slot="selection"
+              slot-scope="data"
+            >
+              <v-chip
+                :selected="data.selected"
+                close
+                class="chip--select-multi"
+                @input="data.parent.selectItem(data.item)"
+              >
+                {{ data.item }}
+              </v-chip>
+            </template>
+            <template
+              slot="item"
+              slot-scope="data"
+            >
+              <template>
+                <v-list-tile-content v-text="data.item"></v-list-tile-content>
+              </template>
+            </template>
+          </v-autocomplete>
         </v-form>
         </v-flex>
         <h3 class="text-center">Vue Top Stories</h3>
         <v-data-iterator
-          :items="results"
+          :items="filteredResults"
           content-tag="v-layout"
           row
           wrap
@@ -81,10 +114,21 @@ export default {
       apiKey: 'xxxxxx',
       alert: 'true',
       alertMessage: 'Enter your New York Times API Key from https://developer.nytimes.com/signup',
+      isEditing: false,
+      allCategories: new Set(),
+      selectedCategories: [],
+      categories: [],
     }
   },
   mounted: function() {
     this.fetchNews()
+  },
+  watch: {
+    isEditing (val) {
+      if (val) {
+        setTimeout(() => (this.isUpdating = false), 3000)
+      }
+    }
   },
   methods: {
     fetchNews() {
@@ -92,12 +136,27 @@ export default {
         .then(response => { 
           this.alert = false
           this.results = response.data.results
+          this.results.map( result => {
+            return result.des_facet.map(facet => {
+              this.allCategories.add(facet)
+            })
+          })
+          this.categories = Array.from(this.allCategories)
+          console.log(this.allCategories)
         })
         .catch(error => {
           this.alert = true
           this.alertMessage = 'Check that your New York Times API Key is correct.'
           console.log(error)
         })
+    },
+  },
+  computed: {
+    filteredResults() {
+      return this.results.filter( i => {
+        return this.selectedCategories.length == 0 ||
+          this.selectedCategories.some(v => i.des_facet.includes(v))
+      })
     },
   },
 }
