@@ -3,6 +3,16 @@
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
         <img src="@/assets/logo.png" alt="Vue top stories" class="mb-5">
+        <v-flex xs12>
+        <v-form full-width>
+          <v-text-field
+            v-model="apiKey"
+            @change="fetchNews"
+            label="New York Times API Key"
+            required
+          ></v-text-field>
+        </v-form>
+        </v-flex>
         <h3 class="text-center">Vue Top Stories</h3>
         <v-data-iterator
           :items="results"
@@ -41,6 +51,13 @@
         </v-data-iterator>
       </v-layout>
     </v-slide-y-transition>
+    <v-alert
+      v-model="alert"
+      dismissible
+      type="warning"
+    >
+      {{ alertMessage }}
+    </v-alert>
   </v-container>
 </template>
 
@@ -52,8 +69,6 @@ import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
 const NYTBaseUrl = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key="
-// Get your API key from https://developer.nytimes.com/signup
-const ApiKey = "xxxxxxxxxxxxxxxxx"
 
 export default {
   name: 'HelloWorld',
@@ -63,12 +78,28 @@ export default {
   data: function() {
 		return {
       results: [],
+      apiKey: 'xxxxxx',
+      alert: 'true',
+      alertMessage: 'Enter your New York Times API Key from https://developer.nytimes.com/signup',
     }
   },
   mounted: function() {
-    Vue.axios.get(NYTBaseUrl + ApiKey)
-    .then(response => { this.results = response.data.results })
-  }
+    this.fetchNews()
+  },
+  methods: {
+    fetchNews() {
+      Vue.axios.get(NYTBaseUrl + this.apiKey)
+        .then(response => { 
+          this.alert = false
+          this.results = response.data.results
+        })
+        .catch(error => {
+          this.alert = true
+          this.alertMessage = 'Check that your New York Times API Key is correct.'
+          console.log(error)
+        })
+    },
+  },
 }
 </script>
 
