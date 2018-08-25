@@ -38,6 +38,16 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+ 
+Vue.use(VueAxios, axios)
+
+const NYTBaseUrl = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key="
+// Get your API key from https://developer.nytimes.com/signup
+const ApiKey = "xxxxxxxxxxxxxxxxx"
+
 export default {
   name: 'HelloWorld',
   props: {
@@ -45,14 +55,13 @@ export default {
   },
   data: function() {
 		return {
-      results: [
-        {title: "the very first post", abstract: "lorem ipsum some test dimpsum"},
-        {title: "and then there was the second", abstract: "lorem ipsum some test dimsum"},
-        {title: "third time's a charm", abstract: "lorem ipsum some test dimsum"},
-        {title: "four the last time", abstract: "lorem ipsum some test dimsum"}
-      ],
+      results: [],
     }
   },
+  mounted: function() {
+    Vue.axios.get(NYTBaseUrl + ApiKey)
+    .then(response => { this.results = response.data.results })
+  }
 }
 </script>
 
