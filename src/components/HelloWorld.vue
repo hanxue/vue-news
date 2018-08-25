@@ -6,8 +6,6 @@
         <h3 class="text-center">Vue Top Stories</h3>
         <v-data-iterator
           :items="results"
-          :rows-per-page-items="rowsPerPageItems"
-          :pagination.sync="pagination"
           content-tag="v-layout"
           row
           wrap
@@ -20,15 +18,24 @@
         md4
         lg3
       >
-        <v-card>
-          <v-card-title><h4>{{ props.item.title }}</h4></v-card-title>
-          <v-divider></v-divider>
-          <v-list dense>
-            <v-list-tile>
-              <v-list-tile-content>Calories:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.abstract }}</v-list-tile-content>
-            </v-list-tile>
-          </v-list>
+        <v-card :href="props.item.url">
+          <v-card-media
+          class="white--text"
+          height="200px"
+          :src="props.item.multimedia[2].url"
+        >
+          <v-container fill-height fluid>
+            <v-layout fill-height>
+              <v-flex xs12 align-end flexbox>
+                <span class="headline">{{ props.item.title }}</span>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-media>
+          <v-card-title>
+            <div class="headline">{{ props.item.des_facet[0] }}</div>
+            <div>{{ props.item.abstract }}</div>
+          </v-card-title>
         </v-card>
         </v-flex>
         </v-data-iterator>
