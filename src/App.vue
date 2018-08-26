@@ -45,7 +45,7 @@
       </v-btn>
     </v-toolbar>
     <v-content>
-      <HelloWorld/>
+      <router-view></router-view>
     </v-content>
     <v-navigation-drawer
       temporary
@@ -70,13 +70,26 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import Router from 'vue-router'
 import HelloWorld from './components/HelloWorld'
+
+Vue.use(Router)
+
+const router = new Router({
+  mode: 'history',
+  scrollBehavior: () => ({ y: 0 }),
+  routes: [
+    { path: '/', meta: {requiresAuth: false}, component: HelloWorld },
+  ]
+})
 
 export default {
   name: 'App',
   components: {
     HelloWorld
   },
+  router,
   data () {
     return {
       clipped: false,

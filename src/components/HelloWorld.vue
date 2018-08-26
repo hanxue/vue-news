@@ -53,7 +53,7 @@
           row
           wrap
         >
-        <v-flex
+        <v-flex v-if="props.item.multimedia[2]"
         slot="item"
         slot-scope="props"
         xs12
@@ -120,7 +120,8 @@ export default {
       categories: [],
     }
   },
-  mounted: function() {
+  created: function() {
+    this.apiKey = this.$route.query.key ? this.$route.query.key : 'xxxxxxxx'
     this.fetchNews()
   },
   watch: {
