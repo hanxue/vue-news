@@ -143,12 +143,11 @@ export default {
             })
           })
           this.categories = Array.from(this.allCategories)
-          console.log(this.allCategories)
         })
         .catch(error => {
           this.alert = true
           this.alertMessage = 'Check that your New York Times API Key is correct.'
-          console.log(error)
+          console.log('New York Times API error ' + error)
         })
     },
   },
