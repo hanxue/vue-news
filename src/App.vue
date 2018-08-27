@@ -77,6 +77,7 @@ import HelloWorld from './components/HelloWorld'
 Vue.use(Router)
 
 const router = new Router({
+  base: '/vue-news/',
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: [

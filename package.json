@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --dest dist/vue-news",
+    "static": "yarn run build && (cd dist/vue-news && python -m http.server 9292)",
+    "deploy": "yarn run build && (cd dist/vue-news && tar cJ . | pv | ssh hanxue@$DO_SG_1 'cat | tar xJ --overwrite -C ~/hanxue.co/vue-news/')",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
